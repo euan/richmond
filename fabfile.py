@@ -20,7 +20,7 @@ def setup_env(fn):
 
 def setup_env_for(branch):
     env.branch = branch
-    env.github_user = 'smn'
+    env.github_user = 'euan'
     env.github_repo_name = 'richmond'
     env.github_repo = 'http://github.com/%(github_user)s/%(github_repo_name)s.git' % env
     
