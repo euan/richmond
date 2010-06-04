@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name = "smn-richmond",
     version = "0.1",
-    url = 'http://github.com/smn/richmond',
+    url = 'http://github.com/euan/richmond',
     license = 'BSD',
     description = "Mobile messaging infrastructure.",
     author = 'Simon de Haan',
