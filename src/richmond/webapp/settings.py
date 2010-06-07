@@ -147,5 +147,5 @@ CLICKATELL_DEFAULTS = {
 
 # for Opera
 OPERA_SERVICE_ID = '20314'
-OPERA_PASSWORD = 'u51e7r0q'
-OPERA_CHANNEL = 'https://dragon.sa.operatelecom.com:1089/Gateway'
+OPERA_PASSWORD = ''
+OPERA_CHANNEL = '111'
