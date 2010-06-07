@@ -31,7 +31,7 @@ def model_to_tuples(instance, exclude=[]):
                 if field.name not in exclude]
     resp = [(str(field.name), str(field.value_to_string(instance))) 
                 for field in fields]
-    return tuple(resp)
+    return resp
 
 def model_to_dict(instance, exclude=[]):
     return dict(model_to_tuples(instance, exclude))
