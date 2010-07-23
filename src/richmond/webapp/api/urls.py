@@ -12,7 +12,8 @@ urlpatterns = patterns('',
     (r'^conversation\.yaml$', conversation_resource, {
         'emitter_format': 'yaml'
     }, 'conversation'),
-    (r'^account/callbacks.json$', url_callback_resource, {}, 'url-callbacks'),
+    (r'^account/callbacks\.json$', url_callback_resource, {}, 'url-callbacks-list'),
+    (r'^account/callbacks/(?P<callback_id>\d+)\.json$', url_callback_resource, {}, 'url-callback'),
     (r'^callback\.html$', views.example_sms_callback, {}, 'sms-example-callback'),
 )
 
@@ -27,4 +28,7 @@ urlpatterns += patterns('',
     (r'^sms/e-scape/', 
         include('richmond.webapp.api.gateways.e_scape.urls', 
                     namespace='e-scape')),
+    (r'^sms/techsys/',
+        include('richmond.webapp.api.gateways.techsys.urls',
+                    namespace='techsys')),
 )

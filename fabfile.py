@@ -238,6 +238,18 @@ def start_webapp(branch, **kwargs):
     )
 
 @_setup_env
+def start_webapp_cluster(branch, *ports, **kwargs):
+    """
+    Start the webapp cluster
+    
+        $ fab start_webapp_cluster:staging,8000,8001,8002,8003
+    
+    """
+    for port in ports:
+        start_webapp(branch,port=port, **kwargs)
+    
+
+@_setup_env
 def restart_webapp(branch, **kwargs):
     """
     Restart the webapp
@@ -251,6 +263,16 @@ def restart_webapp(branch, **kwargs):
     )
 
 @_setup_env
+def restart_webapp_cluster(branch, *ports, **kwargs):
+    """
+    Restart a cluster of webapp instances
+    
+        $ fab restart_webapp_cluster:staging,8000,8001,8002,8003
+    """
+    for port in ports:
+        restart_webapp(branch, port=port, **kwargs)
+
+@_setup_env
 def stop_webapp(branch, **kwargs):
     """
     Stop the webapp
@@ -262,6 +284,18 @@ def stop_webapp(branch, **kwargs):
         _join(env.current, env.github_repo_name),
         twistd.stop_command('richmond_webapp', **kwargs)
     )
+
+@_setup_env
+def stop_webapp_cluster(branch, *ports, **kwargs):
+    """
+    Stop the webapp cluster
+    
+        $ fab stop_webapp_cluster:staging,8000,8001,8002,8003
+    
+    """
+    for port in ports:
+        stop_webapp(branch, port=port, **kwargs)
+
 
 @_setup_env
 def cleanup(branch,limit=5):
@@ -279,3 +313,56 @@ def cleanup(branch,limit=5):
         }
     )
 
+def _get_screens(name_prefix):
+    original_warn_only = env.warn_only
+    env.warn_only = True
+    screens = [line.strip() for line in \
+                run("screen -ls | grep %s" % name_prefix).split('\n')]
+    env.warn_only = original_warn_only
+    if not screens:
+        return []
+    screen_names = [screen.split()[0] for screen in screens]
+    pid_names = [screen_name.split(".") for screen_name in screen_names]
+    return [(pid_name[0], pid_name[1].split("_")[-1]) for pid_name in pid_names]
+
+@_setup_env
+def start_celery_worker(branch, uuid):
+    """
+    Start a celery worker
+    
+        $ fab start_celery:staging,1
+        
+    """
+    with cd(_join(env.current, env.github_repo_name)):
+        run("screen -dmS celery_%(uuid)s ./start-celery.sh %(settings)s %(uuid)s" % {
+            'uuid': uuid,
+            'settings': env.django_settings_file
+        })
+        
+@_setup_env
+def list_celery_workers(branch):
+    """
+    List all running celery workers
+    
+        $ fab list_celery_workers:staging
+    
+    """
+    with cd(_join(env.current, env.github_repo_name)):
+        sessions = _get_screens("celery_")
+        for pid,uuid in sessions:
+            print "Celery Worker => pid:%s, uuid:%s" % (pid, uuid)
+        
+
+@_setup_env
+def stop_celery_worker(branch, uuid):
+    """
+    Stop a celery worker
+    
+        $ fab stop_celery:staging,1
+    
+    """
+    with cd(_join(env.current, env.github_repo_name)):
+        sessions = _get_screens("celery_")
+        for pid,uuid_ in sessions:
+            if uuid_ == uuid:
+                run("kill %s" % pid)

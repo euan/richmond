@@ -7,6 +7,10 @@ ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
 
+from os.path import abspath, join, dirname, basename
+APP_ROOT = abspath(join(dirname(__file__),'..'))
+PROJECT_NAME = basename(APP_ROOT)
+
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -69,7 +73,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'templates',
+    join(APP_ROOT, 'webapp', 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -149,3 +153,11 @@ CLICKATELL_DEFAULTS = {
 OPERA_SERVICE_ID = '20314'
 OPERA_PASSWORD = 'v00m1v00m1'
 OPERA_CHANNEL = '111'
+
+# for E-Scape
+E_SCAPE_API_ID = ''
+E_SCAPE_SMSC = ''
+
+# for Techsys
+TECH_SYS_SMS_GATEWAY_URL = 'http://www.techsysweb2.co.za/sites/Praekelt/Dashboards/dashboard_spicegold/SendSMS/send.asp'
+TECH_SYS_SMS_GATEWAY_BIND = 'PS'
